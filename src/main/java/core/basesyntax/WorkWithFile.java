@@ -14,11 +14,12 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = readDataAndCreateReport(fromFileName);
+        int[] sum = readDataFromFile(fromFileName);
+        String report = createReport(sum[0], sum[1]);
         writeDataToFile(toFileName, report);
     }
 
-    private String readDataAndCreateReport(String fromFileName) {
+    private int[] readDataFromFile(String fromFileName) {
 
         int supplySum = 0;
         int buySum = 0;
@@ -34,10 +35,14 @@ public class WorkWithFile {
                     supplySum += amount;
                 }
             }
-
         } catch (IOException e) {
-            throw new RuntimeException(" ", e);
+            throw new RuntimeException("Can't read data from the file ", e);
         }
+
+        return new int[]{supplySum, buySum};
+    }
+
+    private String createReport(int supplySum, int buySum) {
         int result = supplySum - buySum;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY)
@@ -58,7 +63,7 @@ public class WorkWithFile {
         try {
             Files.writeString(Path.of(toFileName), data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file: ", e);
+            throw new RuntimeException("Can't write data to file ", e);
         }
 
     }
